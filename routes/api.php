@@ -49,4 +49,42 @@ Route::middleware('auth:sanctum')->get('/me', function (Request $request) {
     return response()->json($request->user());
 });
 
+// informação importante, usuario root padrão do sistema criado no arquivo .env
 
+Route::middleware('auth:sanctum')->post('/register-users', function (Request $request) {
+    try {
+        $user = auth()->user();
+
+        if (!$user || !$user->is_admin) {
+            return response()->json([
+                'message' => 'Acesso negado. Apenas administradores podem cadastrar usuários.'
+            ], 403);
+        }
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'setor' => 'nullable|string|max:255',
+            'password' => 'required|string|min:6',
+            'is_admin' => 'boolean',
+        ]);
+
+        $newUser = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'setor' => $request->setor,
+            'password' => Hash::make($request->password),
+            'is_admin' => $request->boolean('is_admin'),
+        ]);
+
+        return response()->json([
+            'message' => 'Usuário criado com sucesso.',
+            'user' => $newUser,
+        ], 201);
+    } catch (\Throwable $e) {
+        return response()->json([
+            'message' => 'Erro interno no servidor.',
+            'error' => $e->getMessage(), // você pode remover isso em produção
+        ], 500);
+    }
+});
