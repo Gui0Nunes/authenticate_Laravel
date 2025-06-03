@@ -34,3 +34,6 @@ Route::post('/login', function (Request $request) {
         return response()->json(['error' => 'Erro interno no servidor'], 500);
     }
 });
+
+
+
