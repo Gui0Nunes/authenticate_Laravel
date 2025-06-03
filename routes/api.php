@@ -49,7 +49,7 @@ Route::middleware('auth:sanctum')->get('/me', function (Request $request) {
     return response()->json($request->user());
 });
 
-// informação importante, usuario root padrão do sistema criado no arquivo .env
+// informação importante, usuario root padrão do sistema criado no arquivo .env (campo pre-preenchido no final do .env.exemple ADMIN_NAME= entre outros)
 
 Route::middleware('auth:sanctum')->post('/register-users', function (Request $request) {
     try {
