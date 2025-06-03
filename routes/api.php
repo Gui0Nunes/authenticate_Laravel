@@ -7,8 +7,10 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
+//verificar se a api está executando
 Route::get('/status', [APIControllerntroller::class, 'status']);
 
+// autenticar no sistema
 Route::post('/login', function (Request $request) {
     try {
         $request->validate([
@@ -35,11 +37,16 @@ Route::post('/login', function (Request $request) {
     }
 });
 
+//sair do sistema
 Route::middleware('auth:sanctum')->post('/logout', function (Request $request) {
     $request->user()->currentAccessToken()->delete();
 
     return response()->json(['message' => 'Logout realizado com sucesso.']);
 });
 
+//informações sobre o login autenticado no momento (minhas infos)
+Route::middleware('auth:sanctum')->get('/me', function (Request $request) {
+    return response()->json($request->user());
+});
 
 
